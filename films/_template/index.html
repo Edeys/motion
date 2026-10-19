@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi" data-composition-variables='[
+  {"id":"hookTitle","type":"string","label":"Hook","default":"Câu hook ở đây."},
+  {"id":"endUrl","type":"string","label":"URL","default":"dautudatnongnghiep.com"},
+  {"id":"endTag","type":"string","label":"Tagline","default":"Đất nông nghiệp có dòng tiền."},
+  {"id":"blue","type":"color","label":"Brand blue","default":"#006AFF"},
+  {"id":"gold","type":"color","label":"Giá","default":"#f2b32b"},
+  {"id":"paper","type":"color","label":"Paper","default":"#f6f1e7"},
+  {"id":"ink","type":"color","label":"Ink","default":"#16211a"},
+  {"id":"endHold","type":"number","label":"Giữ end card (s)","default":2.2,"min":0,"max":10,"step":0.1,"group":"节奏"}
+]'>
+<head>
+<meta charset="utf-8">
+<title><tên film></title>
+<script src="../../vendor/gsap.min.js"></script>
+<script src="../../vendor/om.js"></script>
+<style id="om-fonts">
+@font-face { font-family: "Inter"; src: url("assets/fonts/Inter-var.woff") format("woff"); font-weight: 100 900; }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-700.woff") format("woff"); font-weight: 700; }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-800.woff") format("woff"); font-weight: 800; }
+</style>
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+  #film { position: relative; width: 100%; height: 100%; overflow: hidden;
+    background: linear-gradient(175deg, #12301f 0%, #0c1f14 55%, #081408 100%);
+    color: var(--paper); font-family: "Inter", sans-serif; }
+  section { position: absolute; inset: 0; }
+  /* TODO: style từng scene ở đây. Trạng thái ẩn ban đầu dùng gsap.set, KHÔNG dùng CSS. */
+</style>
+</head>
+<body>
+<div id="film" data-composition-id="film" data-width="1920" data-height="1080">
+
+  <section id="s-hook"><!-- hook scene --></section>
+  <section id="s-end">
+    <!-- end card: logo + URL + tagline -->
+  </section>
+
+</div>
+<script>
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  OM.music({ style: 'pulse', brand: 'Đầu Tư Đất Nông Nghiệp', drop: '<sceneId>', ending: 'button', bpm: 120 });
+  const B = n => OM.beat(n);   // đặt mọi cut/hit lên lưới nhịp
+
+  // Trạng thái ẩn ban đầu — gsap.set, không CSS (theo contract)
+  // gsap.set('#s-hook > *', { opacity: 0 });
+
+  tl.addLabel('scene:hook', 0);
+  // tl.fromTo(...)
+  tl.addLabel('scene:end', 0);
+  tl.to({}, { duration: OM.vars.endHold });  // giữ end card
+
+  window.__timelines['film'] = tl;
+</script>
+</body>
+</html>

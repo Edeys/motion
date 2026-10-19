@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="vi" data-composition-variables='[
+  {"id":"kicker","type":"string","label":"眉题","default":"ĐẤT NÔNG NGHIỆP · TOÀN QUỐC"},
+  {"id":"hookTitle","type":"string","label":"Hook","default":"Nhìn đất như nhìn sổ."},
+  {"id":"claim1","type":"string","label":"Claim 1","default":"TIN CÓ SỔ."},
+  {"id":"claim2","type":"string","label":"Claim 2","default":"GIÁ TRÊN SÀO."},
+  {"id":"endUrl","type":"string","label":"URL","default":"dautudatnongnghiep.com"},
+  {"id":"endTag","type":"string","label":"Tagline","default":"Đất nông nghiệp có dòng tiền."},
+  {"id":"blue","type":"color","label":"Brand blue","default":"#006AFF"},
+  {"id":"gold","type":"color","label":"Giá","default":"#f2b32b"},
+  {"id":"paper","type":"color","label":"Paper","default":"#f6f1e7"},
+  {"id":"ink","type":"color","label":"Ink","default":"#16211a"},
+  {"id":"endHold","type":"number","label":"Giữ end card (s)","default":2.2,"min":0,"max":10,"step":0.1,"group":"节奏"}
+]'>
+<head>
+<meta charset="utf-8">
+<title>dautudatnongnghiep.com — launch film</title>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/om.js"></script>
+<style id="om-fonts">
+@font-face { font-family: "Inter"; src: url("assets/fonts/Inter-var.woff") format("woff"); font-weight: 100 900; font-style: normal; }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-700.woff") format("woff"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-800.woff") format("woff"); font-weight: 800; font-style: normal; }
+</style>
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+  #film { position: relative; width: 100%; height: 100%; overflow: hidden;
+    background: linear-gradient(175deg, #12301f 0%, #0c1f14 55%, #081408 100%);
+    color: var(--paper); font-family: "Inter", sans-serif; font-weight: 500; }
+  .grain { position: absolute; inset: 0; pointer-events: none; z-index: 60; opacity: .55; background:
+      radial-gradient(1400px 800px at 25% 8%, #2d5a3d33, transparent 60%),
+      radial-gradient(1000px 700px at 85% 95%, #00000055, transparent 65%); }
+  section { position: absolute; inset: 0; }
+  .kicker-line { letter-spacing: 8px; font-weight: 700; }
+  .mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .18em; }
+  .ch { display: inline-block; will-change: transform; }
+
+  /* ---------- scene:map ---------- */
+  #parcels { position: absolute; inset: 0; }
+  #parcels path.lot { fill: none; stroke: #3f9d63; stroke-width: 3; opacity: .5; }
+  #parcels path.lot.fill { fill: #3f9d6322; }
+  #parcels path.hero { fill: #3f9d6340; stroke: #57c98a; stroke-width: 4; opacity: 1; }
+  #parcels path.road { fill: none; stroke: #f6f1e722; stroke-width: 8; stroke-dasharray: 26 20; }
+  #pin { position: absolute; left: 1170px; top: 120px; width: 74px; height: 96px; z-index: 5; }
+  .pill { position: absolute; background: var(--gold); color: #2b1d05; font-weight: 800;
+    font-size: 30px; padding: 12px 22px; border-radius: 999px; box-shadow: 0 10px 30px #0008; z-index: 6;
+    font-family: "Poppins", "Inter", sans-serif; }
+  #pill1 { left: 1330px; top: 165px; }
+  #pill2 { left: 790px;  top: 215px; }
+  #pill3 { left: 1560px; top: 415px; }
+  #hook { position: absolute; left: 130px; top: 760px; z-index: 8; }
+  #hook-kick { color: #9ec9ae; font-size: 26px; }
+  #hook-title { margin: 14px 0 0; font-family: "Poppins"; font-weight: 800; font-size: 118px;
+    line-height: 1.04; letter-spacing: -2px; color: var(--paper); text-shadow: 0 6px 40px #000a; }
+
+  /* ---------- scene:listings ---------- */
+  #lst-kick { position: absolute; left: 140px; top: 150px; color: #9ec9ae; font-size: 26px; }
+  #lst-head { position: absolute; left: 140px; top: 196px; font-family: "Poppins"; font-weight: 800;
+    font-size: 64px; letter-spacing: -1px; }
+  .lcard { position: absolute; top: 330px; width: 540px; height: 420px; background: var(--paper);
+    color: var(--ink); border-radius: 28px; padding: 30px 32px; box-sizing: border-box;
+    box-shadow: 0 30px 80px #000a; }
+  #card1 { left: 120px; }
+  #card2 { left: 690px; }
+  #card3 { left: 1260px; }
+  .lc-top { display: flex; gap: 18px; align-items: center; }
+  .lc-map { width: 104px; height: 76px; border-radius: 12px; background: #dfe9dc; flex: none; }
+  .lc-title { font-family: "Poppins"; font-weight: 700; font-size: 30px; line-height: 1.15; }
+  .lc-loc { color: #5d6b60; font-size: 21px; margin-top: 6px; }
+  .lc-price { margin-top: 26px; display: flex; align-items: baseline; gap: 16px; }
+  .lc-vnd { font-family: "Poppins"; font-weight: 800; font-size: 62px; letter-spacing: -1px; }
+  .lc-sao { background: var(--gold); color: #2b1d05; font-weight: 800; font-size: 24px;
+    padding: 8px 16px; border-radius: 999px; }
+  .lc-badges { margin-top: 22px; display: flex; gap: 12px; }
+  .bdg { font-size: 20px; font-weight: 700; padding: 8px 14px; border-radius: 999px; }
+  .bdg.so { background: #dcefe1; color: #14632f; }
+  .bdg.cc { background: #e3ecff; color: #134a9e; }
+
+  /* ---------- scene:quyhoach ---------- */
+  #qh-hero { position: absolute; left: 430px; top: 120px; width: 1060px; height: 680px; }
+  #qh-hero .zone { opacity: .82; }
+  #qh-hero .bord { fill: none; stroke: #f6f1e7; stroke-width: 4; }
+  #qh-cap { position: absolute; left: 0; right: 0; top: 838px; text-align: center;
+    font-family: "Poppins"; font-weight: 700; font-size: 56px; color: var(--paper);
+    text-shadow: 0 6px 30px #000c; }
+  #qh-cap b { color: var(--gold); }
+  #qh-legend { position: absolute; left: 130px; top: 210px; display: flex; flex-direction: column; gap: 14px; }
+  .leg { display: flex; align-items: center; gap: 14px; background: #f6f1e7e8; color: #16211a;
+    font-weight: 700; font-size: 24px; padding: 12px 20px; border-radius: 14px; box-shadow: 0 12px 34px #0009; }
+  .leg i { width: 26px; height: 26px; border-radius: 7px; display: inline-block; }
+  #qh-tag { position: absolute; left: 130px; top: 420px; background: var(--blue); color: #fff;
+    font-weight: 800; font-size: 22px; letter-spacing: 3px; padding: 12px 18px; border-radius: 10px; }
+
+  /* ---------- scene:tools ---------- */
+  #tools-kick { position: absolute; left: 140px; top: 190px; color: #9ec9ae; font-size: 26px; }
+  #tools-head { position: absolute; left: 140px; top: 236px; font-family: "Poppins"; font-weight: 800; font-size: 64px; }
+  .chip { position: absolute; width: 330px; height: 110px; background: var(--paper); color: var(--ink);
+    border-radius: 22px; display: flex; align-items: center; gap: 16px; padding: 0 26px;
+    box-sizing: border-box; font-weight: 700; font-size: 27px; box-shadow: 0 24px 60px #000a; }
+  .chip i { width: 46px; height: 46px; border-radius: 12px; flex: none; }
+  #chip1 { left: 140px;  top: 420px; } #chip1 i { background: var(--blue); }
+  #chip2 { left: 500px;  top: 560px; } #chip2 i { background: #e2607a; }
+  #chip3 { left: 860px;  top: 700px; } #chip3 i { background: #e8c53a; }
+  #chip4 { left: 1220px; top: 560px; } #chip4 i { background: #4c9a57; }
+  #chip5 { left: 1580px; top: 420px; } #chip5 i { background: #e85d04; }
+
+  /* ---------- scene:claim ---------- */
+  #s-claim h2 { position: absolute; left: 0; right: 0; text-align: center; margin: 0;
+    font-family: "Poppins"; font-weight: 800; font-size: 168px; letter-spacing: -3px;
+    color: var(--paper); }
+  #c1 { top: 250px; }
+  #c2 { top: 470px; color: var(--gold); }
+  #c-under { position: absolute; left: 640px; top: 668px; width: 640px; height: 14px;
+    background: var(--blue); border-radius: 8px; transform-origin: 0 50%; }
+
+  /* ---------- scene:end ---------- */
+  #end-wrap { position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 34px; }
+  #logo-pill { width: 132px; height: 132px; border-radius: 34px; background: var(--blue);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 90px #006aff55; }
+  #end-url { font-family: "Poppins"; font-weight: 800; font-size: 84px; letter-spacing: -1px; }
+  #end-tag { font-size: 34px; color: #9ec9ae; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="film" data-composition-id="film" data-width="1920" data-height="1080">
+  <audio id="om-sound" src="assets/sound.wav" data-start="0" data-duration="22.5" data-track-index="8" data-volume="1"></audio>
+
+  <section id="s-map">
+    <svg id="parcels" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+      <path class="road" d="M -60 720 C 420 690, 900 760, 1980 660"/>
+      <path class="lot" d="M120,180 L340,150 L380,290 L160,320 Z"/>
+      <path class="lot" d="M430,110 L640,140 L610,280 L410,250 Z"/>
+      <path class="lot fill" d="M720,190 L940,165 L965,330 L730,345 Z"/>
+      <path class="hero" data-om-id="hero-parcel" d="M1080,140 L1420,110 L1480,330 L1120,360 Z"/>
+      <path class="lot" d="M1540,150 L1790,185 L1750,330 L1510,300 Z"/>
+      <path class="lot" d="M150,390 L370,360 L395,520 L175,545 Z"/>
+      <path class="lot fill" d="M460,340 L650,360 L630,505 L440,480 Z"/>
+      <path class="lot" d="M1490,400 L1770,375 L1800,540 L1530,565 Z"/>
+      <path class="lot" d="M530,560 L720,540 L745,690 L560,710 Z"/>
+      <path class="lot fill" d="M1500,620 L1730,600 L1760,760 L1520,780 Z"/>
+      <path class="lot" d="M780,470 L980,450 L1000,600 L800,620 Z"/>
+      <path class="lot" d="M980,610 L1180,590 L1200,730 L1000,750 Z"/>
+    </svg>
+    <svg id="pin" data-om-id="pin" viewBox="0 0 74 96">
+      <path d="M37 96 C30 78 4 52 4 36 A33 33 0 1 1 70 36 C70 52 44 78 37 96 Z" fill="var(--blue)"/>
+      <circle cx="37" cy="34" r="13" fill="#fff"/>
+    </svg>
+    <div class="pill" id="pill1" data-om-id="pill1">85 tr / sào</div>
+    <div class="pill" id="pill2" data-om-id="pill2">109 tr / sào</div>
+    <div class="pill" id="pill3" data-om-id="pill3">136 tr / sào</div>
+    <div id="hook">
+      <div id="hook-kick" class="kicker-line" data-om-id="hook-kick" data-var-text="kicker">ĐẤT NÔNG NGHIỆP · TOÀN QUỐC</div>
+      <h1 id="hook-title" data-om-id="hook-title" data-om-var="hookTitle"></h1>
+    </div>
+  </section>
+
+  <section id="s-listings">
+    <div id="lst-kick" class="kicker-line" data-om-id="lst-kick">ĐANG ĐĂNG THẬT TRÊN SÀN</div>
+    <div id="lst-head" data-om-id="lst-head">Tin chính chủ · giá trên sào</div>
+
+    <div class="lcard" id="card1" data-om-id="card1">
+      <div class="lc-top">
+        <svg class="lc-map" viewBox="0 0 104 76"><rect width="104" height="76" rx="12" fill="#dfe9dc"/><path d="M10,44 L52,14 L98,26 L92,62 L36,68 Z" fill="#4c9a5755" stroke="#2f7a46" stroke-width="3"/><circle cx="62" cy="38" r="7" fill="#006AFF"/></svg>
+        <div>
+          <div class="lc-title">Rẫy sầu riêng Ri6 · 12,5 ha</div>
+          <div class="lc-loc">Quốc lộ 14 · Buôn Ma Thuột</div>
+        </div>
+      </div>
+      <div class="lc-price"><span class="lc-vnd">10,6 tỷ</span><span class="lc-sao">85 tr / sào</span></div>
+      <div class="lc-badges"><span class="bdg so">✓ Sổ đỏ</span><span class="bdg cc">Chính chủ</span></div>
+    </div>
+
+    <div class="lcard" id="card2" data-om-id="card2">
+      <div class="lc-top">
+        <svg class="lc-map" viewBox="0 0 104 76"><rect width="104" height="76" rx="12" fill="#dfe9dc"/><path d="M12,20 L72,8 L100,34 L86,68 L26,60 Z" fill="#4c9a5755" stroke="#2f7a46" stroke-width="3"/><path d="M8,56 C 34 44, 60 66, 96 50" fill="none" stroke="#3d8bd4" stroke-width="4"/><circle cx="70" cy="30" r="7" fill="#006AFF"/></svg>
+        <div>
+          <div class="lc-title">Rẫy cà phê 2 hồ suối · 4,6 ha</div>
+          <div class="lc-loc">Quảng Tân · Gia Nghĩa</div>
+        </div>
+      </div>
+      <div class="lc-price"><span class="lc-vnd">5 tỷ</span><span class="lc-sao">109 tr / sào</span></div>
+      <div class="lc-badges"><span class="bdg so">✓ Sổ đỏ</span><span class="bdg cc">Chính chủ</span></div>
+    </div>
+
+    <div class="lcard" id="card3" data-om-id="card3">
+      <div class="lc-top">
+        <svg class="lc-map" viewBox="0 0 104 76"><rect width="104" height="76" rx="12" fill="#dfe9dc"/><path d="M10,30 L60,10 L100,38 L82,70 L20,64 Z" fill="#4c9a5755" stroke="#2f7a46" stroke-width="3"/><circle cx="34" cy="42" r="6" fill="#3d8bd4"/><circle cx="56" cy="52" r="5" fill="#3d8bd4"/><circle cx="70" cy="34" r="4" fill="#3d8bd4"/><circle cx="50" cy="30" r="6" fill="#006AFF"/></svg>
+        <div>
+          <div class="lc-title">Đất farm 3 hồ nước · 2,2 ha</div>
+          <div class="lc-loc">gần QL28 · Bắc Gia Nghĩa</div>
+        </div>
+      </div>
+      <div class="lc-price"><span class="lc-vnd">3 tỷ</span><span class="lc-sao">136 tr / sào</span></div>
+      <div class="lc-badges"><span class="bdg so">✓ Sổ đỏ</span><span class="bdg cc">Chính chủ</span></div>
+    </div>
+  </section>
+
+  <section id="s-qh">
+    <svg id="qh-hero" viewBox="0 0 1060 680" data-om-id="qh-parcel">
+      <path class="zone" id="z-luc" d="M40,20 L300,34 L370,560 L20,470 Z" fill="#e8c53a"/>
+      <path class="zone" id="z-ont" d="M300,34 L580,48 L560,600 L370,560 Z" fill="#e2607a"/>
+      <path class="zone" id="z-cln" d="M580,48 L820,60 L920,500 L660,640 L560,600 Z" fill="#4c9a57"/>
+      <path class="bord" d="M40,20 L300,34 L580,48 L820,60 L920,500 L660,640 L560,600 L370,560 L20,470 Z" fill="none"/>
+    </svg>
+    <div id="qh-legend">
+      <div class="leg" id="leg1"><i style="background:#e8c53a"></i>LUC · đất trồng lúa</div>
+      <div class="leg" id="leg2"><i style="background:#e2607a"></i>ONT · đất ở nông thôn</div>
+      <div class="leg" id="leg3"><i style="background:#4c9a57"></i>CLN · cây lâu năm</div>
+    </div>
+    <div id="qh-tag" data-om-id="qh-tag">QHSDĐ · TỪNG TỜ THỬA</div>
+    <div id="qh-cap" data-om-id="qh-cap">Soi quy hoạch từng thửa — <b>trước khi xuống tiền.</b></div>
+  </section>
+
+  <section id="s-tools">
+    <div id="tools-kick" class="kicker-line" data-om-id="tools-kick">DỮ LIỆU &amp; TIỆN ÍCH</div>
+    <div id="tools-head" data-om-id="tools-head">10 công cụ miễn phí</div>
+    <div class="chip" id="chip1" data-om-id="chip1"><i></i>Định giá nhanh</div>
+    <div class="chip" id="chip2" data-om-id="chip2"><i></i>Soi quy hoạch</div>
+    <div class="chip" id="chip3" data-om-id="chip3"><i></i>Phí sang tên</div>
+    <div class="chip" id="chip4" data-om-id="chip4"><i></i>Bảng giá đất</div>
+    <div class="chip" id="chip5" data-om-id="chip5"><i></i>Việc làm vườn</div>
+  </section>
+
+  <section id="s-claim">
+    <h2 id="c1" data-om-id="claim1" data-var-text="claim1">TIN CÓ SỔ.</h2>
+    <h2 id="c2" data-om-id="claim2" data-var-text="claim2">GIÁ TRÊN SÀO.</h2>
+    <div id="c-under" data-om-id="claim-under"></div>
+  </section>
+
+  <section id="s-end">
+    <div id="end-wrap">
+      <div id="logo-pill" data-om-id="logo">
+        <svg viewBox="0 0 64 64" width="76" height="76"><path d="M32 52 C32 36 24 26 10 22 C16 38 22 46 32 52 Z" fill="#fff"/><path d="M32 52 C32 32 40 20 56 14 C52 34 44 46 32 52 Z" fill="#fff" opacity=".92"/><rect x="30" y="50" width="4" height="10" rx="2" fill="#fff"/></svg>
+      </div>
+      <div id="end-url" data-om-id="end-url" data-var-text="endUrl">dautudatnongnghiep.com</div>
+      <div id="end-tag" data-om-id="end-tag" data-var-text="endTag">Đất nông nghiệp có dòng tiền.</div>
+    </div>
+  </section>
+
+  <div class="grain"></div>
+</div>
+
+<script>
+  const V = OM.vars();
+  const seg = typeof Intl !== 'undefined' && Intl.Segmenter
+    ? new Intl.Segmenter('vi', { granularity: 'grapheme' }) : null;
+  const split = (s) => seg ? [...seg.segment(s)].map(x => x.segment) : [...s];
+  const esc = (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c] || c;
+  const maskify = (el, text) => {
+    el.innerHTML = split(text).map((c) =>
+      c === ' ' ? ' ' : `<span class="mask"><span class="ch">${esc(c)}</span></span>`).join('');
+  };
+  maskify(document.getElementById('hook-title'), V.hookTitle);
+
+  // ---------- music ----------
+  OM.music({ bpm: 120 });
+  OM.music({ style: 'pulse', brand: 'Đầu Tư Đất Nông Nghiệp', drop: 'quyhoach', ending: 'button' });
+  const B = (n) => OM.beat(n);   // beat → seconds @120bpm = n × .5
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const spr = OM.spring(0.12);
+
+  // hidden starts (gsap.set, not CSS)
+  gsap.set('#pin', { y: -260, scale: 1.9, transformOrigin: '50% 90%' });
+  gsap.set('.pill', { scale: 1.7, opacity: 0, rotation: -10 });
+  gsap.set('#hook-kick', { opacity: 0, x: -30 });
+  gsap.set('#hook-title .ch', { yPercent: 140 });
+  gsap.set(['#lst-kick', '#lst-head'], { opacity: 0, x: -40 });
+  gsap.set('.lcard', { y: 700, rotation: (i) => [-7, 0, 7][i], opacity: 0 });
+  gsap.set(['#qh-hero', '#qh-tag', '#qh-cap'], { opacity: 0 });
+  gsap.set('#qh-legend .leg', { opacity: 0 });
+  gsap.set(['#tools-kick', '#tools-head'], { opacity: 0, x: -40 });
+  gsap.set('.chip', { y: 160, opacity: 0, scale: .8 });
+  gsap.set(['#c1', '#c2'], { scale: 2.4, opacity: 0 });
+  gsap.set('#c-under', { scaleX: 0 });
+  gsap.set('#end-wrap > *', { opacity: 0, y: 40, scale: .92 });
+  gsap.set(['#s-listings', '#s-qh', '#s-tools', '#s-claim', '#s-end'], { autoAlpha: 0 });
+
+  // parcel draw-in via stroke dash
+  document.querySelectorAll('#parcels path').forEach((p) => {
+    const len = p.getTotalLength();
+    p.style.strokeDasharray = p.classList.contains('road') ? '26 20' : len;
+    p.style.strokeDashoffset = p.classList.contains('road') ? 0 : len;
+  });
+
+  // ================= scene:map =================
+  tl.addLabel('scene:map', 0)
+    .to('#parcels path.lot', { strokeDashoffset: 0, duration: 1.1, stagger: .07, ease: 'power2.inOut' }, .1)
+    .to('#parcels path.hero', { strokeDashoffset: 0, duration: .9, ease: 'power2.inOut' }, .3)
+    .to('#pin', { y: 0, scale: 1, duration: .55, ease: spr }, OM.sfx('pop', B(1)))
+    .to('#pill1', { scale: 1, opacity: 1, rotation: 0, duration: .3, ease: 'power4.in' }, OM.sfx('stamp', B(2) + .02))
+    .to('#pill2', { scale: 1, opacity: 1, rotation: 0, duration: .3, ease: 'power4.in' }, OM.sfx('pop', B(3) + .05))
+    .to('#pill3', { scale: 1, opacity: 1, rotation: 0, duration: .3, ease: 'power4.in' }, OM.sfx('pop', B(4) + .08))
+    .to('#hook-kick', { opacity: 1, x: 0, duration: .5 }, .45)
+    .to('#hook-title .ch', { yPercent: 0, duration: .8, stagger: .035, ease: 'expo.out' }, .55)
+    .to('#s-map', { scale: 1.05, duration: 3, ease: 'none' }, 0)
+    .to('#s-map', { autoAlpha: 0, y: -60, duration: .4, ease: 'power2.in' }, 2.7);
+
+  // ================= scene:listings =================
+  tl.addLabel('scene:listings', 3.0)
+    .set('#s-listings', { autoAlpha: 1 }, 3.0)
+    .to('#lst-kick', { opacity: 1, x: 0, duration: .4 }, 3.0)
+    .to('#lst-head', { opacity: 1, x: 0, duration: .5, ease: 'expo.out' }, 3.05)
+    .to('#card1', { y: 0, opacity: 1, rotation: 0, duration: .5, ease: spr }, OM.sfx('thud', B(6)))
+    .to('#card2', { y: 0, opacity: 1, rotation: 0, duration: .5, ease: spr }, OM.sfx('thud', B(8)))
+    .to('#card3', { y: 0, opacity: 1, rotation: 0, duration: .5, ease: spr }, OM.sfx('thud', B(10)))
+    .fromTo('#card1 .lc-vnd', { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: .35, ease: 'power4.in' }, OM.sfx('tick', 3.35))
+    .fromTo('#card2 .lc-vnd', { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: .35, ease: 'power4.in' }, OM.sfx('tick', 4.35))
+    .fromTo('#card3 .lc-vnd', { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: .35, ease: 'power4.in' }, OM.sfx('tick', 5.35))
+    .to('.lcard', { y: -14, duration: .5, ease: 'power2.out' }, 6.2)
+    .to('#s-listings', { x: -140, autoAlpha: 0, duration: .5, ease: 'power2.in' }, OM.sfx('whoosh', 7.5) - .35);
+
+  // ================= scene:quyhoach (drop) =================
+  tl.addLabel('scene:quyhoach', 8.0)
+    .set('#s-qh', { autoAlpha: 1 }, 8.0)
+    .fromTo('#qh-hero', { opacity: 0, scale: .62, y: 80 }, { opacity: 1, scale: 1, y: 0, duration: .7, ease: 'expo.out' }, OM.sfx('whoosh', 8.0))
+    .fromTo('#z-luc', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: .45, ease: 'power3.inOut' }, OM.sfx('paper', B(18)))
+    .fromTo('#z-ont', { clipPath: 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0 0 0%)', duration: .45, ease: 'power3.inOut' }, OM.sfx('paper', B(19)))
+    .fromTo('#z-cln', { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: .45, ease: 'power3.inOut' }, OM.sfx('paper', B(20)))
+    .fromTo('#qh-hero .bord', { opacity: 0 }, { opacity: 1, duration: .4 }, 10.3)
+    .to('#qh-tag', { opacity: 1, x: 0, duration: .4 }, OM.sfx('ding', B(21)))
+    .fromTo('#leg1', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .35 }, OM.sfx('tick', B(21) + .1))
+    .fromTo('#leg2', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .35 }, OM.sfx('tick', B(22) + .1))
+    .fromTo('#leg3', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .35 }, OM.sfx('tick', B(23) + .1))
+    .to('#qh-cap', { opacity: 1, y: 0, duration: .5, ease: 'expo.out' }, OM.sfx('ding', B(24)))
+    .to('#s-qh', { autoAlpha: 0, scale: .97, duration: .35, ease: 'power2.in' }, 12.2);
+
+  // ================= scene:tools =================
+  tl.addLabel('scene:tools', 12.5)
+    .set('#s-tools', { autoAlpha: 1 }, 12.5)
+    .to('#tools-kick', { opacity: 1, x: 0, duration: .4 }, 12.5)
+    .to('#tools-head', { opacity: 1, x: 0, duration: .5, ease: 'expo.out' }, 12.55)
+    .to('#chip1', { y: 0, opacity: 1, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', B(25)))
+    .to('#chip2', { y: 0, opacity: 1, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', B(26)))
+    .to('#chip3', { y: 0, opacity: 1, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', B(27)))
+    .to('#chip4', { y: 0, opacity: 1, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', B(28)))
+    .to('#chip5', { y: 0, opacity: 1, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', B(29)))
+    .to('#s-tools', { autoAlpha: 0, y: -50, duration: .35, ease: 'power2.in' }, 15.7);
+
+  // ================= scene:claim =================
+  tl.addLabel('scene:claim', 16.0)
+    .set('#s-claim', { autoAlpha: 1 }, 16.0)
+    .to('#c1', { scale: 1, opacity: 1, duration: .3, ease: 'power4.in' }, OM.sfx('impact', B(32)))
+    .to('#c2', { scale: 1, opacity: 1, duration: .3, ease: 'power4.in' }, OM.sfx('impact', B(34)))
+    .to('#c-under', { scaleX: 1, duration: .4, ease: 'power3.inOut' }, OM.sfx('draw', B(35)))
+    .to('#s-claim', { autoAlpha: 0, scale: .94, duration: .3, ease: 'power2.in' }, 18.3);
+
+  // ================= scene:end =================
+  tl.addLabel('scene:end', 18.5)
+    .set('#s-end', { autoAlpha: 1 }, 18.5)
+    .to('#logo-pill', { opacity: 1, y: 0, scale: 1, duration: .6, ease: spr }, OM.sfx('chime', 18.6))
+    .to('#end-url', { opacity: 1, y: 0, scale: 1, duration: .5, ease: 'expo.out' }, OM.sfx('pop', 19.2))
+    .to('#end-tag', { opacity: 1, y: 0, scale: 1, duration: .6 }, 19.7)
+    .to({}, { duration: V.endHold });
+
+  window.__timelines['film'] = tl;
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Render outputs — tái tạo được, không cần git
+films/*/out/*.mp4
+films/*/assets/sound.wav
+films/*/index-*.png
+node_modules/
+.DS_Store
+films/*/.om/
+films/*/out/*.webp
