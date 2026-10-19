@@ -1,0 +1,413 @@
+﻿<!doctype html>
+<html lang="vi" data-composition-variables='[
+  {"id":"kicker","type":"string","label":"Kicker","default":"OPEN SOURCE · APACHE-2.0 · LOCAL-FIRST"},
+  {"id":"hookTitle","type":"string","label":"Hook","default":"One brief."},
+  {"id":"claim1","type":"string","label":"Claim 1","default":"ONE BRIEF."},
+  {"id":"claim2","type":"string","label":"Claim 2","default":"EVERY DELIVERABLE."},
+  {"id":"endUrl","type":"string","label":"URL","default":"open-design.ai"},
+  {"id":"endTag","type":"string","label":"Tagline","default":"Local-first. Open source. BYOK."},
+  {"id":"paper","type":"color","label":"Paper","default":"#efe7d2"},
+  {"id":"ink","type":"color","label":"Ink","default":"#15140f"},
+  {"id":"lime","type":"color","label":"Lime","default":"#63fe13"},
+  {"id":"grey","type":"color","label":"Grey","default":"#8c8c8c"},
+  {"id":"endHold","type":"number","label":"Giữ end card (s)","default":1.4,"min":0,"max":8,"step":0.1,"group":"节奏"}
+]'>
+<head>
+<meta charset="utf-8">
+<title>OpenDesign — One brief. Every deliverable.</title>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/om.js"></script>
+<style id="om-fonts">
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-700.woff") format("woff"); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Poppins"; src: url("assets/fonts/Poppins-800.woff") format("woff"); font-weight: 800; font-style: normal; }
+@font-face { font-family: "Inter"; src: url("assets/fonts/Inter-var.woff") format("woff"); font-weight: 100 900; font-style: normal; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-700.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+</style>
+<style>
+  :root {
+    --paper: #efe7d2; --ink: #15140f; --lime: #63fe13; --lime-soft: #d8ffb5;
+    --grey: #8c8c8c; --white: #fafafa;
+  }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+  #film { position: relative; width: 100%; height: 100%; overflow: hidden;
+    background: var(--paper); color: var(--ink);
+    font-family: "Inter", sans-serif; font-weight: 500; }
+  section { position: absolute; inset: 0; }
+
+  .mono { font-family: "JetBrains Mono", monospace; }
+  .kicker-line { font-family: "JetBrains Mono", monospace; font-size: 22px; letter-spacing: 4px;
+    color: #5f5c4f; text-transform: uppercase; font-weight: 700; }
+  .mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .18em; }
+  .ch { display: inline-block; will-change: transform; }
+
+  /* subtle paper texture */
+  .grain { position: absolute; inset: 0; pointer-events: none; z-index: 90; opacity: .5;
+    background:
+      radial-gradient(1200px 700px at 18% 6%, #ffffff88, transparent 62%),
+      radial-gradient(900px 600px at 88% 96%, #15140f10, transparent 66%); }
+
+  /* ================= scene: brief ================= */
+  #s-brief { display: flex; flex-direction: column; justify-content: center;
+    padding: 0 130px; gap: 54px; }
+  #brief-kick { margin-bottom: 6px; }
+  #hook { font-family: "Poppins"; font-weight: 800; font-size: 190px; line-height: .92;
+    letter-spacing: -6px; margin: 0; }
+  #term { margin-top: 30px; background: var(--ink); border-radius: 18px; padding: 26px 30px;
+    display: inline-flex; align-items: center; gap: 16px; align-self: flex-start;
+    box-shadow: 0 26px 60px #15140f22; }
+  #term .prompt { color: var(--lime); font-family: "JetBrains Mono", monospace; font-size: 30px; font-weight: 700; }
+  #term .cmd { color: #fafafa; font-family: "JetBrains Mono", monospace; font-size: 30px; }
+  #cursor { width: 16px; height: 34px; background: var(--lime); display: inline-block; }
+
+  /* ================= scene: fanout ================= */
+  #s-fanout { display: flex; align-items: center; justify-content: center; }
+  #hub { position: absolute; left: 860px; top: 440px; width: 200px; height: 130px;
+    background: var(--ink); border-radius: 20px; display: flex; align-items: center;
+    justify-content: center; box-shadow: 0 30px 70px #15140f33; z-index: 4; }
+  #hub span { color: var(--lime); font-family: "JetBrains Mono", monospace; font-size: 30px; font-weight: 700; }
+  .branch { position: absolute; left: 960px; top: 505px; height: 3px; background: var(--ink);
+    transform-origin: 0 50%; border-radius: 2px; z-index: 2; }
+  .node { position: absolute; width: 340px; height: 190px; background: var(--white);
+    border: 3px solid var(--ink); border-radius: 20px; box-shadow: 0 24px 50px #15140f1a;
+    display: flex; flex-direction: column; justify-content: space-between; padding: 22px 24px;
+    box-sizing: border-box; z-index: 5; }
+  .node .nlabel { font-family: "Poppins"; font-weight: 800; font-size: 34px; letter-spacing: -1px; }
+  .node .ntag { font-family: "JetBrains Mono", monospace; font-size: 15px; color: #5f5c4f; letter-spacing: 1px; }
+  .node.on { border-color: var(--ink); background: var(--lime-soft); }
+  #n1 { left: 170px; top: 170px; }
+  #n2 { left: 1410px; top: 170px; }
+  #n3 { left: 170px; top: 720px; }
+  #n4 { left: 1410px; top: 720px; }
+
+  /* ================= scene: proof ================= */
+  #s-proof { padding: 90px 120px; }
+  #proof-kick { position: absolute; left: 120px; top: 78px; }
+  #proof-head { position: absolute; left: 120px; top: 120px; font-family: "Poppins";
+    font-weight: 800; font-size: 62px; letter-spacing: -2px; margin: 0; }
+  .pcard { position: absolute; width: 400px; height: 520px; background: var(--white);
+    border: 3px solid var(--ink); border-radius: 22px; overflow: hidden;
+    box-shadow: 0 30px 60px #15140f1a; }
+  .pcard .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 22px;
+    font-family: "JetBrains Mono", monospace; font-size: 18px; font-weight: 700;
+    letter-spacing: 1px; background: var(--ink); color: var(--lime); }
+  #p1 { left: 120px; top: 250px; } #p2 { left: 560px; top: 250px; }
+  #p3 { left: 1000px; top: 250px; } #p4 { left: 1440px; top: 250px; }
+  .pcard svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* ================= scene: hyperframes (DROP) ================= */
+  #s-hf { background: var(--ink); }
+  #hf-stage { position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 44px; }
+  #hf-title { font-family: "Poppins"; font-weight: 800; font-size: 88px; letter-spacing: -3px;
+    color: var(--paper); margin: 0; }
+  #hf-title em { font-style: normal; color: var(--lime); }
+  #pipe { display: flex; align-items: center; gap: 18px; }
+  .step { background: #1f1e18; border: 2px solid #34322a; border-radius: 16px;
+    padding: 24px 30px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+    min-width: 210px; }
+  .step .slabel { font-family: "JetBrains Mono", monospace; font-size: 15px; color: var(--grey);
+    letter-spacing: 2px; }
+  .step .sval { font-family: "JetBrains Mono", monospace; font-size: 26px; color: var(--paper); font-weight: 700; }
+  .arrow { color: var(--lime); font-size: 34px; font-family: "JetBrains Mono", monospace; }
+  #hf-out { margin-top: 6px; font-family: "JetBrains Mono", monospace; font-size: 26px;
+    color: var(--lime); letter-spacing: 1px; }
+  #hf-bar-wrap { width: 980px; height: 16px; background: #2a2822; border-radius: 5px; overflow: hidden; }
+  #hf-bar { width: 100%; height: 100%; background: var(--lime); border-radius: 5px;
+    transform-origin: 0 50%; transform: scaleX(0); }
+  #hf-scan { position: absolute; top: 0; bottom: 0; width: 220px; z-index: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, #63fe1312, transparent); }
+  #hf-note { position: absolute; bottom: 74px; left: 0; right: 0; text-align: center;
+    font-family: "JetBrains Mono", monospace; font-size: 19px; color: #8a8775; letter-spacing: 2px; }
+
+  /* ================= scene: claim ================= */
+  #s-claim { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  #s-claim h2 { margin: 0; font-family: "Poppins"; font-weight: 800; letter-spacing: -6px;
+    line-height: .96; text-align: center; }
+  #c1 { font-size: 150px; }
+  #c2 { font-size: 150px; color: var(--ink); }
+  #c-under { width: 900px; height: 22px; background: var(--lime); border-radius: 12px;
+    transform-origin: 0 50%; margin-top: 22px; }
+
+  /* ================= scene: end ================= */
+  #s-end { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
+  #logo-mark { width: 150px; height: 150px; border-radius: 38px; background: var(--ink);
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 80px #15140f33; }
+  #logo-mark svg { width: 92px; height: 92px; }
+  #end-url { font-family: "Poppins"; font-weight: 800; font-size: 96px; letter-spacing: -3px; }
+  #end-tag { font-family: "JetBrains Mono", monospace; font-size: 25px; color: #5f5c4f; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+<div id="film" data-composition-id="film" data-width="1920" data-height="1080">
+  <audio id="om-sound" src="assets/sound.wav" data-start="0" data-duration="22.5" data-track-index="8" data-volume="1"></audio>
+
+  <!-- ============ brief ============ -->
+  <section id="s-brief">
+    <div id="brief-kick" class="kicker-line" data-om-id="kicker" data-var-text="kicker">OPEN SOURCE · APACHE-2.0 · LOCAL-FIRST</div>
+    <h1 id="hook" data-om-id="hook" data-var-text="hookTitle">One brief.</h1>
+    <div id="term" data-om-id="term">
+      <span class="prompt">›</span>
+      <span class="cmd" id="term-cmd"></span>
+      <span id="cursor"></span>
+    </div>
+  </section>
+
+  <!-- ============ fanout ============ -->
+  <section id="s-fanout">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1" viewBox="0 0 1920 1080">
+      <path id="br1" class="brpath" d="M960 505 L340 265" stroke="#15140f" stroke-width="3" fill="none"/>
+      <path id="br2" class="brpath" d="M960 505 L1580 265" stroke="#15140f" stroke-width="3" fill="none"/>
+      <path id="br3" class="brpath" d="M960 505 L340 815" stroke="#15140f" stroke-width="3" fill="none"/>
+      <path id="br4" class="brpath" d="M960 505 L1580 815" stroke="#15140f" stroke-width="3" fill="none"/>
+    </svg>
+    <div id="hub" data-om-id="hub"><span>brief</span></div>
+    <div class="node" id="n1" data-om-id="n1"><div class="nlabel">Prototype</div><div class="ntag">WEB · MOBILE · DESKTOP</div></div>
+    <div class="node" id="n2" data-om-id="n2"><div class="nlabel">Dashboard</div><div class="ntag">LIVE ARTIFACT · KPI</div></div>
+    <div class="node" id="n3" data-om-id="n3"><div class="nlabel">Deck</div><div class="ntag">HTML · PDF · PPTX</div></div>
+    <div class="node on" id="n4" data-om-id="n4"><div class="nlabel">Motion</div><div class="ntag">HYPERFRAMES → MP4</div></div>
+  </section>
+
+  <!-- ============ proof ============ -->
+  <section id="s-proof">
+    <div id="proof-kick" class="kicker-line">SAME BRIEF · FOUR SURFACES</div>
+    <h2 id="proof-head">Your agent writes all of it.</h2>
+
+    <div class="pcard" id="p1" data-om-id="p1">
+      <svg viewBox="0 0 400 520">
+        <rect x="30" y="34" width="340" height="26" rx="6" fill="#15140f" opacity=".12"/>
+        <rect x="30" y="86" width="150" height="150" rx="10" fill="#63fe13" opacity=".85"/>
+        <rect x="196" y="86" width="174" height="70" rx="10" fill="#15140f" opacity=".10"/>
+        <rect x="196" y="166" width="174" height="70" rx="10" fill="#15140f" opacity=".07"/>
+        <rect x="30" y="256" width="340" height="12" rx="6" fill="#15140f" opacity=".16"/>
+        <rect x="30" y="282" width="250" height="12" rx="6" fill="#15140f" opacity=".10"/>
+        <rect x="30" y="330" width="340" height="90" rx="12" fill="#15140f" opacity=".06"/>
+      </svg>
+      <div class="cap">prototype.html</div>
+    </div>
+
+    <div class="pcard" id="p2" data-om-id="p2">
+      <svg viewBox="0 0 400 520">
+        <rect x="30" y="40" width="100" height="56" rx="8" fill="#15140f" opacity=".10"/>
+        <rect x="150" y="40" width="100" height="56" rx="8" fill="#15140f" opacity=".10"/>
+        <rect x="270" y="40" width="100" height="56" rx="8" fill="#15140f" opacity=".10"/>
+        <g fill="#63fe13">
+          <rect x="40" y="330" width="46" height="120" rx="4"/>
+          <rect x="106" y="270" width="46" height="180" rx="4"/>
+          <rect x="172" y="300" width="46" height="150" rx="4"/>
+          <rect x="238" y="210" width="46" height="240" rx="4"/>
+          <rect x="304" y="150" width="46" height="300" rx="4"/>
+        </g>
+        <line x1="30" y1="452" x2="370" y2="452" stroke="#15140f" stroke-width="3" opacity=".3"/>
+      </svg>
+      <div class="cap">dashboard</div>
+    </div>
+
+    <div class="pcard" id="p3" data-om-id="p3">
+      <svg viewBox="0 0 400 520">
+        <rect x="40" y="50" width="320" height="180" rx="10" fill="#15140f" opacity=".10"/>
+        <rect x="62" y="86" width="150" height="18" rx="5" fill="#15140f" opacity=".55"/>
+        <rect x="62" y="118" width="240" height="10" rx="5" fill="#15140f" opacity=".22"/>
+        <rect x="62" y="138" width="200" height="10" rx="5" fill="#15140f" opacity=".16"/>
+        <rect x="40" y="258" width="320" height="180" rx="10" fill="#63fe13" opacity=".55"/>
+        <rect x="62" y="294" width="120" height="18" rx="5" fill="#15140f" opacity=".6"/>
+        <rect x="62" y="326" width="220" height="10" rx="5" fill="#15140f" opacity=".25"/>
+      </svg>
+      <div class="cap">deck · 16 slides</div>
+    </div>
+
+    <div class="pcard" id="p4" data-om-id="p4">
+      <svg viewBox="0 0 400 520">
+        <rect x="30" y="40" width="340" height="200" rx="10" fill="#15140f"/>
+        <circle cx="200" cy="140" r="34" fill="#63fe13"/>
+        <polygon points="188,124 188,156 214,140" fill="#15140f"/>
+        <rect x="30" y="268" width="340" height="14" rx="7" fill="#15140f" opacity=".18"/>
+        <rect x="30" y="300" width="340" height="14" rx="7" fill="#63fe13"/>
+        <rect x="30" y="332" width="230" height="14" rx="7" fill="#15140f" opacity=".10"/>
+        <rect x="30" y="380" width="340" height="80" rx="10" fill="#15140f" opacity=".06"/>
+      </svg>
+      <div class="cap">motion · mp4</div>
+    </div>
+  </section>
+
+  <!-- ============ hyperframes (drop) ============ -->
+  <section id="s-hf">
+    <div id="hf-scan"></div>
+    <div id="hf-stage">
+      <h2 id="hf-title">Motion is <em>just code</em>.</h2>
+      <div id="pipe">
+        <div class="step" id="st1" data-om-id="st1"><div class="slabel">WRITE</div><div class="sval">index.html</div></div>
+        <div class="arrow" id="ar1">→</div>
+        <div class="step" id="st2" data-om-id="st2"><div class="slabel">RENDER</div><div class="sval">Chrome</div></div>
+        <div class="arrow" id="ar2">→</div>
+        <div class="step" id="st3" data-om-id="st3"><div class="slabel">ENCODE</div><div class="sval">FFmpeg</div></div>
+        <div class="arrow" id="ar3">→</div>
+        <div class="step" id="st4" data-om-id="st4"><div class="slabel">OUTPUT</div><div class="sval">out/*.mp4</div></div>
+      </div>
+      <div id="hf-out" data-om-id="hf-out">deterministic · 30 fps · no timeline app</div>
+      <div id="hf-bar-wrap"><div id="hf-bar"></div></div>
+    </div>
+    <div id="hf-note">HYPERFRAMES · AGENT-NATIVE VIDEO</div>
+  </section>
+
+  <!-- ============ claim ============ -->
+  <section id="s-claim">
+    <h2 id="c1" data-om-id="claim1" data-var-text="claim1">ONE BRIEF.</h2>
+    <h2 id="c2" data-om-id="claim2" data-var-text="claim2">EVERY DELIVERABLE.</h2>
+    <div id="c-under" data-om-id="claim-under"></div>
+  </section>
+
+  <!-- ============ end ============ -->
+  <section id="s-end">
+    <div id="logo-mark" data-om-id="logo">
+      <svg viewBox="0 0 100 100">
+        <text x="50" y="68" text-anchor="middle" font-family="Poppins, sans-serif"
+              font-weight="800" font-size="46" fill="#63fe13" letter-spacing="-2">OD</text>
+      </svg>
+    </div>
+    <div id="end-url" data-om-id="end-url" data-var-text="endUrl">open-design.ai</div>
+    <div id="end-tag" data-om-id="end-tag" data-var-text="endTag">Local-first. Open source. BYOK.</div>
+  </section>
+
+  <div class="grain"></div>
+</div>
+
+<script>
+  const V = OM.vars();
+  const seg = (typeof Intl !== 'undefined' && Intl.Segmenter)
+    ? new Intl.Segmenter('vi', { granularity: 'grapheme' }) : null;
+  const split = (s) => seg ? [...seg.segment(s)].map(x => x.segment) : [...s];
+  const esc = (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c] || c;
+  const maskify = (el, text) => {
+    el.innerHTML = split(text).map((c) =>
+      c === ' ' ? ' ' : `<span class="mask"><span class="ch">${esc(c)}</span></span>`).join('');
+  };
+  maskify(document.getElementById('hook'), V.hookTitle);
+
+  // ---------- music ----------
+  OM.music({ bpm: 120, product: 'devtool', drop: 'hyperframes', ending: 'button' });
+  const B = (n) => OM.beat(n);   // 120 BPM → beat = .5s
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const spr = OM.spring(0.12);
+
+  // ---------- hidden starts ----------
+  gsap.set('#brief-kick', { opacity: 0, x: -30 });
+  gsap.set('#hook .ch', { yPercent: 150 });
+  gsap.set('#term', { opacity: 0, y: 26 });
+  gsap.set('#cursor', { opacity: 0 });
+  gsap.set(['#s-fanout', '#s-proof', '#s-hf', '#s-claim', '#s-end'], { autoAlpha: 0 });
+  gsap.set('#hub', { scale: 0, opacity: 0 });
+  gsap.set('.node', { scale: .8, opacity: 0 });
+  gsap.set('.brpath', { strokeDasharray: 1200, strokeDashoffset: 1200 });
+  gsap.set(['#proof-kick', '#proof-head'], { opacity: 0, x: -40 });
+  gsap.set('.pcard', { y: 90, opacity: 0 });
+  gsap.set(['#hf-title', '#hf-out', '#hf-note'], { opacity: 0, y: 30 });
+  gsap.set('.step', { opacity: 0, y: 34, scale: .94 });
+  gsap.set('.arrow', { opacity: 0 });
+  gsap.set('#hf-bar-wrap', { opacity: 0 });
+  gsap.set(['#c1', '#c2'], { opacity: 0, scale: 1.35 });
+  gsap.set('#c-under', { scaleX: 0 });
+  gsap.set('#s-end > *', { opacity: 0, y: 34 });
+
+  // typing for the terminal line
+  const CMD = 'od brief "landing page for our design system"';
+  const cmdEl = document.getElementById('term-cmd');
+  let typed = '';
+  const typeAt = (t, text) => {
+    for (let i = 0; i < text.length; i++) {
+      tl.call(() => { typed = text.slice(0, i + 1); cmdEl.textContent = typed; }, null, t + i * 0.028);
+    }
+  };
+
+  // ================= scene: brief =================
+  tl.addLabel('scene:brief', 0)
+    .to('#brief-kick', { opacity: 1, x: 0, duration: .5 }, .1)
+    .to('#hook .ch', { yPercent: 0, duration: .85, stagger: .04, ease: 'expo.out' }, .25)
+    .to('#term', { opacity: 1, y: 0, duration: .5, ease: 'expo.out' }, 1.1)
+    .to('#cursor', { opacity: 1, duration: .01 }, 1.35)
+    .to('#cursor', { opacity: 0, duration: .01, repeat: 3, yoyo: true }, 1.4);
+
+  typeAt(1.5, CMD);
+  tl.to({}, { duration: .1 }, 1.5 + CMD.length * 0.028 + .1);
+  tl.to('#cursor', { opacity: 0, duration: .01 }, 1.5 + CMD.length * 0.028 + .15);
+  tl.to('#s-brief', { autoAlpha: 0, y: -50, duration: .4, ease: 'power2.in' }, 2.65);
+
+  // ================= scene: fanout =================
+  tl.addLabel('scene:fanout', 3.0)
+    .set('#s-fanout', { autoAlpha: 1 }, 3.0)
+    .to('#hub', { scale: 1, opacity: 1, duration: .5, ease: spr }, OM.sfx('pop', 3.0))
+    .to('.brpath', { strokeDashoffset: 0, duration: .5, stagger: .09, ease: 'power2.inOut' }, 3.35)
+    .to('#n1', { scale: 1, opacity: 1, duration: .45, ease: spr }, OM.sfx('pop', 3.85))
+    .to('#n2', { scale: 1, opacity: 1, duration: .45, ease: spr }, OM.sfx('pop', 3.95))
+    .to('#n3', { scale: 1, opacity: 1, duration: .45, ease: spr }, OM.sfx('pop', 4.05))
+    .to('#n4', { scale: 1, opacity: 1, duration: .45, ease: spr }, OM.sfx('pop', 4.15))
+    .to('#n4', { boxShadow: '0 0 0 5px #63fe13', duration: .35 }, 4.8)
+    .to('#n4', { scale: 1.06, duration: .3, ease: 'power2.out' }, 4.8)
+    // giữ hình sống: hub đập nhẹ, 3 node kia nhấp nhô lệch pha, cả khối trôi chậm
+    .to('#hub', { scale: 1.05, duration: .55, ease: 'sine.inOut', yoyo: true, repeat: 5 }, 5.2)
+    .to('#n1', { y: -12, duration: .7, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 5.3)
+    .to('#n2', { y: -12, duration: .7, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 5.55)
+    .to('#n3', { y: -12, duration: .7, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 5.8)
+    .to('#s-fanout', { scale: 1.085, duration: 3.0, ease: 'none' }, 4.9)
+    .to('.brpath', { strokeDasharray: '14 10', strokeDashoffset: -240, duration: 3.0, ease: 'none' }, 4.9)
+    .to('#s-fanout', { autoAlpha: 0, scale: .96, duration: .4, ease: 'power2.in' }, 7.9);
+
+  // ================= scene: proof =================
+  tl.addLabel('scene:proof', 8.5)
+    .set('#s-proof', { autoAlpha: 1 }, 8.5)
+    .to('#proof-kick', { opacity: 1, x: 0, duration: .4 }, 8.5)
+    .to('#proof-head', { opacity: 1, x: 0, duration: .5, ease: 'expo.out' }, 8.55)
+    .to('#p1', { y: 0, opacity: 1, duration: .5, ease: spr }, OM.sfx('thud', B(18)))
+    .to('#p2', { y: 0, opacity: 1, duration: .5, ease: spr }, OM.sfx('thud', B(19)))
+    .to('#p3', { y: 0, opacity: 1, duration: .5, ease: spr }, OM.sfx('thud', B(20)))
+    .to('#p4', { y: 0, opacity: 1, duration: .5, ease: spr }, OM.sfx('thud', B(21)))
+    .to('.pcard', { y: -12, duration: .4, ease: 'power2.out' }, 11.6)
+    .to('#s-proof', { x: -120, autoAlpha: 0, duration: .45, ease: 'power2.in' }, OM.sfx('whoosh', 12.75) - .3);
+
+  // ================= scene: hyperframes (DROP) =================
+  tl.addLabel('scene:hyperframes', 13.0)
+    .set('#s-hf', { autoAlpha: 1 }, 13.0)
+    .to('#hf-title', { opacity: 1, y: 0, duration: .55, ease: 'expo.out' }, OM.sfx('impact', 13.0))
+    .to('#st1', { opacity: 1, y: 0, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', 13.35))
+    .to('#ar1', { opacity: 1, duration: .2 }, 13.45)
+    .to('#st2', { opacity: 1, y: 0, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', 13.95))
+    .to('#ar2', { opacity: 1, duration: .2 }, 14.05)
+    .to('#st3', { opacity: 1, y: 0, scale: 1, duration: .4, ease: spr }, OM.sfx('tick', 14.55))
+    .to('#ar3', { opacity: 1, duration: .2 }, 14.65)
+    .to('#st4', { opacity: 1, y: 0, scale: 1, duration: .4, ease: spr }, OM.sfx('ding', 15.15))
+    .to('#hf-out', { opacity: 1, y: 0, duration: .5, ease: 'expo.out' }, OM.sfx('chime', B(32)))
+    .to('#hf-note', { opacity: 1, y: 0, duration: .4 }, B(32) + .2)
+    // thanh tiến trình chạy suốt scene: giữ khung hình không đứng yên
+    .to('#hf-bar-wrap', { opacity: 1, duration: .3 }, 13.3)
+    .fromTo('#hf-bar', { scaleX: 0 }, { scaleX: 1, duration: 3.85, ease: 'none' }, 13.3)
+    .fromTo('#hf-scan', { xPercent: -100 }, { xPercent: 100, duration: 3.85, ease: 'none' }, 13.3)
+    .to('#s-hf', { scale: 1.07, duration: 4.15, ease: 'none' }, 13.0)
+    // pipeline trôi nhẹ + từng step nhấp theo nhịp
+    .to('#pipe', { y: -10, duration: 2.0, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 14.2)
+    .to(['#st1','#st2','#st3','#st4'], { y: -8, duration: .45, stagger: .1, ease: 'sine.inOut', yoyo: true, repeat: 2 }, 14.6)
+    .to('#hf-title', { scale: 1.02, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 13.8)
+    .to('#s-hf', { autoAlpha: 0, duration: .35, ease: 'power2.in' }, 17.15);
+
+  // ================= scene: claim =================
+  tl.addLabel('scene:claim', 17.5)
+    .set('#s-claim', { autoAlpha: 1 }, 17.5)
+    .to('#c1', { opacity: 1, scale: 1, duration: .35, ease: 'power4.in' }, OM.sfx('impact', B(35)))
+    .to('#c2', { opacity: 1, scale: 1, duration: .35, ease: 'power4.in' }, OM.sfx('impact', B(37)))
+    .to('#c-under', { scaleX: 1, duration: .45, ease: 'power3.inOut' }, OM.sfx('draw', B(38)))
+    .to('#s-claim', { autoAlpha: 0, scale: .95, duration: .3, ease: 'power2.in' }, 19.35);
+
+  // ================= scene: end =================
+  tl.addLabel('scene:end', 19.5)
+    .set('#s-end', { autoAlpha: 1 }, 19.5)
+    .to('#logo-mark', { opacity: 1, y: 0, duration: .55, ease: spr }, OM.sfx('chime', 19.6))
+    .to('#end-url', { opacity: 1, y: 0, duration: .5, ease: 'expo.out' }, OM.sfx('pop', 20.2))
+    .to('#end-tag', { opacity: 1, y: 0, duration: .5 }, 20.6)
+    .to('#logo-mark', { y: -12, duration: .55, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 19.9)
+    .to('#s-end', { scale: 1.022, duration: 1.2, ease: 'none' }, 19.8)
+    .to({}, { duration: V.endHold });
+
+  window.__timelines['film'] = tl;
+</script>
+</body>
+</html>

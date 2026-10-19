@@ -6,3 +6,7 @@ node_modules/
 .DS_Store
 films/*/.om/
 films/*/out/*.webp
+
+# Skill cài local, không commit
+.agents/
+skills-lock.json
